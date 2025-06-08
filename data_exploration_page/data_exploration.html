@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PICO-db Contact Renders</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+  <style>
+    .zoom-container {
+      position: relative;
+      overflow: hidden;
+      cursor: zoom-in;
+    }
+    .zoom-container img {
+      width: 100%;
+      transition: transform 0.2s, transform-origin 0.2s;
+    }
+  </style>
+</head>
+<body>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">PICO-db Contact Renders</h1>
+      <p>Select an object category and click the button to view 3 random samples.</p>
+      <p class="mb-4">🔎 To <b>zoom</b> into an area, click and hold the left mouse button.</p>
+
+      <br />
+
+      <div class="field" style="max-width: 300px;">
+        <label class="label">Object Category</label>
+        <div class="control">
+          <div class="select is-fullwidth">
+            <select id="categorySelect">
+              <option value="">Select category</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="field">
+        <div class="control">
+          <button class="button is-link" onclick="showSamples()">Show random samples</button>
+        </div>
+      </div>
+
+      <br />
+
+      <div id="results"></div>
+    </div>
+  </section>
+
+  <script>
+    const doneImagesUrl = "done_images.txt";
+    const imageBaseUrl = "https://hoirec.s3.eu-central-1.amazonaws.com/dataset_contact_renders/";
+    let allImages = [];
+
+    async function fetchImages() {
+      const response = await fetch(doneImagesUrl);
+      const text = await response.text();
+      allImages = text.split('\n').map(x => x.trim()).filter(x => x);
+
+      const categories = [...new Set(allImages.map(x => x.split('__')[0]))].sort();
+      const select = document.getElementById("categorySelect");
+      categories.forEach(cat => {
+        const opt = document.createElement("option");
+        opt.value = cat;
+        opt.innerText = cat;
+        select.appendChild(opt);
+      });
+    }
+
+    function showSamples() {
+      const category = document.getElementById("categorySelect").value;
+      if (!category) return;
+
+      const filtered = allImages.filter(x => x.startsWith(category + "__"));
+      const samples = filtered.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+      const results = document.getElementById("results");
+      results.innerHTML = "";
+
+      samples.forEach(name => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "box";
+
+        const label = document.createElement("p");
+        label.innerHTML = `<strong>Image:</strong> ${name}`;
+
+        const imgContainer = document.createElement("div");
+        imgContainer.className = "zoom-container";
+
+        const img = document.createElement("img");
+        img.src = imageBaseUrl + name;
+        img.onmousedown = (e) => zoomIn(e, img);
+        img.onmouseup = () => zoomOut(img);
+
+        imgContainer.appendChild(img);
+        wrapper.appendChild(label);
+        wrapper.appendChild(imgContainer);
+        results.appendChild(wrapper);
+      });
+    }
+
+    function zoomIn(e, img) {
+      const rect = img.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      img.style.transformOrigin = `${x}% ${y}%`;
+      img.style.transform = "scale(3)";
+    }
+
+    function zoomOut(img) {
+      img.style.transform = "scale(1)";
+    }
+
+    fetchImages();
+  </script>
+</body>
+</html>

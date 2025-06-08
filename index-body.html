@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="PICO: Reconstructing 3D People In Contact with Objects"
+    />
+    <meta
+      name="keywords"
+      content="PICO, HOI, Contact, Human-Object Contact, 3D Reconstruction"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+      PICO: Reconstructing 3D People In Contact with Objects
+    </title>
+    <link rel="icon" href="/media/upload/static/images/pico_icon.png" type="image/png">
+
+    <link
+      href="/media/upload/skin/custom/fonts.googleapis.com_css_family=Google+Sans_Noto+Sans_Castoro.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/media/upload/static/css/bulma.min.css" />
+    <link rel="stylesheet" href="/media/upload/static/css/bulma-carousel.min.css" />
+    <link rel="stylesheet" href="/media/upload/static/css/bulma-slider.min.css" />
+    <link rel="stylesheet" href="/media/upload/static/css/fontawesome.all.min.css" />
+    <link
+      rel="stylesheet"
+      href="/media/upload/skin/custom/cdn.jsdelivr.net_gh_jpswalsh_academicons@1_css_academicons.min.css"
+    />
+    <link rel="stylesheet" href="/media/upload/static/css/index.css" />
+
+    <style>
+      .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 10px;
+      }
+      .render_wrapper {
+        position: relative;
+        height: 300px;
+      }
+      .render_wrapper_relative {
+        position: relative;
+        max-height: 300px;
+        height: auto;
+        width: auto;
+      }
+      .render_div {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .nested-columns {
+        margin-bottom: 0 !important;
+      }
+
+      .outer-div {
+        display: grid;
+        place-items: center; /* Vertically and horizontally align content */
+        /* height: 300px; */
+        width: auto;
+      }
+
+      .desc_div {
+        position: relative;
+        padding-left: 10%;
+        display: none;
+      }
+    </style>
+
+    <script src="/media/upload/skin/custom/ajax.googleapis.com_ajax_libs_jquery_3.5.1_jquery.min.js"></script>
+    <script src="/media/upload/static/js/bulma-carousel.min.js"></script>
+    <script src="/media/upload/static/js/bulma-slider.min.js"></script>
+    <script src="/media/upload/static/js/index.js"></script>
+  </head>
+
+  <body>
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container is-max-desktop">
+          <div class="columns is-centered">
+            <div class="column has-text-centered">
+              <h1 class="title is-1 publication-title">
+                <span style="color: #de3f1f">PICO</span>:
+                Reconstructing 3D
+                <br>
+                <span style="color: #de3f1f">P</span>eople
+                <span style="color: #de3f1f">I</span>n
+                <span style="color: #de3f1f">C</span>ontact with
+                <span style="color: #de3f1f">O</span>bjects
+              </h1>
+              <h1 class="is-size-3">
+                <strong style="color: de3f1f">CVPR 2025</strong>
+              </h1>
+              
+              <div class="is-size-5 publication-authors">
+                <span class="author-block">
+                  <a href="https://www.linkedin.com/in/alp%C3%A1r-cseke-b8784a179/">Alpár Cseke</a><sup>1,2*</sup> ·
+                </span>
+                <span class="author-block">
+                  <a href="https://sha2nkt.github.io/">Shashank Tripathi</a><sup>1*†</sup> ·
+                </span>
+                <span class="author-block">
+                  <a href="https://saidwivedi.in/">Sai Kumar Dwivedi</a><sup>1</sup> ·
+                </span>
+                <span class="author-block">
+                  <a href="https://www.andrew.cmu.edu/user/aslakshm/">Arjun S. Lakshmipathy</a><sup>3</sup> ·
+                </span>
+                <br>
+                <span class="author-block">
+                  <a href="https://ac5113.github.io/">Agniv Chatterjee</a><sup>4</sup> ·
+                </span>
+                <!-- <br> -->
+                <span class="author-block">
+                  <a href="https://ps.is.mpg.de/person/black">Michael J. Black</a><sup>1</sup> ·
+                </span>
+                <span class="author-block">
+                  <a href="https://dtzionas.com/">Dimitrios Tzionas</a><sup>5</sup>
+                </span>
+              </div>
+
+              <div>
+                <span class="author-block"><sup>*</sup>equal contribution&emsp;</span>
+                <span class="author-block"><sup>†</sup>project lead</span>
+              </div>
+
+              <div class="is-size-6 publication-authors">
+                <span class="author-block"><sup>1</sup>Max Planck Institute for Intelligent Systems, Tübingen, Germany</span>
+                <span class="author-block"><sup>2</sup>Meshcapade</span>
+                <br>
+                <span class="author-block"><sup>3</sup>Carnegie Mellon University, USA</span>
+                <span class="author-block"><sup>4</sup>UT Austin, USA</span>
+                <span class="author-block"><sup>5</sup>University of Amsterdam, the Netherlands</span>
+              </div>
+
+              <div class="column has-text-centered">
+                <div class="publication-links">
+                  <!-- PDF Link. -->
+                  <span class="link-block"> 
+                    <a 
+                      class="external-link button is-normal is-rounded is-dark" 
+                      href="https://arxiv.org/abs/2504.17695"
+                      target="_blank" 
+                      rel="noopener"
+                    > 
+                      <span class="icon"> 
+                        <img src="/media/upload/skin/custom/arxiv.svg" width="15" /> 
+                      </span> &nbsp;&nbsp;arXiv
+                    </a> 
+                  </span>
+
+                  <!-- TODO: add https://openaccess.thecvf.com/content/ link in href tag -->
+                  <span class="link-block"> 
+                    <a 
+                      class="external-link button is-normal is-rounded" 
+                      href="#" 
+                      target="_blank" 
+                      rel="noopener"
+                    > 
+                      <span class="icon"> 
+                        <img src="/media/upload/skin/custom/pdf.svg" width="15" style="filter: brightness(0);" /> 
+                      </span> &nbsp;&nbsp;Paper
+                    </a> 
+                  </span>
+                  
+                  <!-- Poster Link. -->
+                  <!-- TODO: add poster link in href tag -->
+                  <span class="link-block"> 
+                    <a 
+                      class="external-link button is-normal is-rounded" 
+                      href="#" 
+                      target="_blank" 
+                      rel="noopener"
+                    > 
+                      <span class="icon"> 
+                        <img src="/media/upload/skin/custom/poster.svg" width="15" style="filter: brightness(0);" /> 
+                      </span> &nbsp;&nbsp;Poster
+                    </a> 
+                  </span>
+
+                  <!-- Video Link. -->
+                  <!-- TODO: add youtube video link in href tag -->
+                  <span class="link-block"> 
+                    <a 
+                      class="external-link button is-normal is-rounded" 
+                      href="#" 
+                      target="_blank" 
+                      rel="noopener"
+                    > 
+                      <span class="icon"> 
+                        <img src="/media/upload/skin/custom/video.svg" width="15" style="filter: brightness(0);" />
+                      </span> &nbsp;&nbsp;Video
+                    </a> 
+                  </span>
+
+                  <!-- Github Link. -->
+                  <!-- TODO: add github code link in href tag -->
+                  <span class="link-block"> 
+                    <a 
+                      class="external-link button is-normal is-rounded" 
+                      href="#" 
+                      target="_blank" 
+                      rel="noopener"
+                    > 
+                      <span class="icon"> 
+                        <img src="/media/upload/skin/custom/github.svg" width="15" style="filter: brightness(0);" /> 
+                      </span> &nbsp;&nbsp;Code
+                    </a> 
+                  </span>
+
+                  <!-- Dataset Exploration Link -->
+                  <span class="link-block"> 
+                    <a 
+                      class="external-link button is-normal is-rounded is-dark" 
+                      href="dataexploration.html" 
+                      target="_blank" 
+                      rel="noopener"
+                    > 
+                      <span class="icon"> 
+                        <img src="/media/upload/skin/custom/search.svg" width="15" /> 
+                      </span> &nbsp;&nbsp;Explore Dataset
+                    </a> 
+                  </span>
+
+                  <!-- Database/Login Link -->
+                  <span class="link-block"> 
+                    <a 
+                      class="external-link button is-normal is-rounded" 
+                      href="download.php" 
+                      target="_blank" 
+                      rel="noopener"
+                    > 
+                      <span class="icon"> 
+                        <img src="/media/upload/skin/custom/database.svg" width="15" style="filter: brightness(0);" /> 
+                      </span> &nbsp;&nbsp;Dataset
+                    </a> 
+                  </span>
+
+                  <br />
+
+                  <!-- Colab -->
+                  <!-- <span class="link-block"> 
+                    <a 
+                      class="external-link button is-normal is-rounded" 
+                      href="" 
+                      style="background: rgb(255, 255, 255)"
+                      target="_blank" 
+                      rel="noopener"
+                    > 
+                      <span class="icon"> 
+                        <img src="/media/upload/skin/custom/colab.svg" width="30" /> 
+                      </span> &nbsp;&nbsp;Google Colab
+                    </a> 
+                  </span> -->
+
+                  <!-- HuggingFace -->
+                  <!-- <span class="link-block"> 
+                    <a 
+                      class="external-link button is-normal is-rounded" 
+                      href="" 
+                      style="background: rgb(255, 255, 255)"
+                      target="_blank" 
+                      rel="noopener"
+                    > 
+                      <span class="icon"> 
+                        <img src="/media/upload/skin/custom/huggingface.svg" width="30" /> 
+                      </span> &nbsp;&nbsp; HuggingFace
+                    </a> 
+                  </span> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero teaser">
+      <div class="container is-max-desktop">
+        <div class="hero-body">
+          <img src="/media/upload/static/images/pico_teaser.png" height="150%" />
+          <h2 class="subtitle has-text-centered" style="padding-top: 10px">
+            <p align="justify">
+              <b>We present PICO, a novel framework for joint human-object reconstruction in 3D.</b>
+              <br>
+              PICO includes <b>PICO-db</b>, a unique dataset that pairs natural images with dense vertex-level 3D contact correspondences
+              on both the human and the object. We leverage this dataset for building <b>PICO-fit</b>, an optimization-based method that fits
+              3D body and object meshes to an image guided by rich contact constraints.
+              Here, we show reconstruction results of PICO-fit: 3D human pose and shape (<span style="color: blue">blue</span>), 
+              3D object pose and shape (<span style="color: orange">orange</span>),
+              and contact correspondences.
+            </p>
+          </h2>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero is-light is-small">
+      <div class="hero-body">
+        <h2 class="title is-3" style="text-align: center;">PICO-db Dataset Examples</h2>
+        <div class="container">
+          <div id="results-carousel" class="carousel results-carousel">
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                  src="/media/upload/static/images/db_examples/Bild1.png"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                  src="/media/upload/static/images/db_examples/Bild2.png"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                  src="/media/upload/static/images/db_examples/Bild3.png"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                  src="/media/upload/static/images/db_examples/Bild5.png"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                  src="/media/upload/static/images/db_examples/Bild6.png"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                  src="/media/upload/static/images/db_examples/Bild7.png"
+                />
+              </div>
+            </div>
+          </div>
+          <div style="text-align: center">
+            <div class="container is-max-desktop" style="padding-top: 15px">
+              Left to right: Color image, contacts (shown in various colors) annotated on the body and object.
+              <br>
+              Contact annotations establish bijective body-object correspondences, denoted with color-coding.
+              <br><br>
+              <b style="font-size: 1.2em; color: #de3f1f;"> You can explore all annotations of the dataset 🔎<a href="dataexploration.html" style="color: #007acc;"><u>here</u></a>🔎👀.</b>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <!-- Overview. -->
+        <div
+          class="columns is-centered has-text-centered"
+          style="margin-top: 15px"
+        >
+          <div class="column is-full-width">
+            <h2 class="title is-3">Method Overview</h2>
+            <img src="/media/upload/static/images/pico_overview.png" />
+            <div class="content has-text-justified" style="padding-top: 15px">
+              Overview of <b>PICO-fit</b>, a novel method for fitting interacting 3D body and object meshes to an image.
+              It initializes 3D body shape and pose via OSX, 3D object shape via OpenShape, and body-object contacts via retrieval from PICO-db.
+              Then, it takes three steps:
+              (1) It exploits contacts to solve for object pose, to register the object to the body.
+              (2) It refines object pose and (3) body pose to align these to an object and human mask, respectively,
+              detected in the image while satisfying contacts and avoiding penetrations.
+              For every stage we show inputs, outputs, losses, and optimizable variables.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero is-light is-small">
+      <div class="hero-body">
+        <h2 class="title is-3" style="text-align: center;">Reconstruction Examples</h2>
+        <h2 class="title is-4" style="text-align: center;">Comparison with SOTA:</h2>
+        <div class="container">
+          <div id="results-carousel" class="carousel results-carousel">
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                  src="/media/upload/static/images/comparisons/skateboard__hake_train2015_HICO_train2015_00004907.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/comparisons/keyboard__hake_train2015_HICO_train2015_00008279.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/comparisons/suitcase__hake_train2015_HICO_train2015_00010788.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/comparisons/skateboard__hake_train2015_HICO_train2015_00010753.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/comparisons/tennis_racket__vcoco_000000388153.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/comparisons/suitcase__vcoco_000000249561.gif"
+                />
+              </div>
+            </div>
+          </div>
+          <div style="text-align: center">
+            <div class="container is-max-desktop" style="padding-top: 15px">
+              From left to right: Color image, reconstructions from CONTHO, PHOSA* and PICO-fit*.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero is-light is-small">
+      <div class="hero-body">
+        <h2 class="title is-4" style="text-align: center;">PICO-fit* examples:</h2>
+        <div class="container">
+          <div id="results-carousel" class="carousel results-carousel">
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                  src="/media/upload/static/images/pico_fit_gt/baseball_bat__vcoco_000000432239.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_gt/bench__hake_train2015_HICO_train2015_00011358.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_gt/bottle__hake_train2015_HICO_train2015_00005719.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_gt/couch__hake_train2015_HICO_train2015_00005989.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_gt/cup__hake_train2015_HICO_train2015_00002228.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_gt/fork__vcoco_000000241396.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_gt/laptop__hake_train2015_HICO_train2015_00002755.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_gt/motorcycle__hake_train2015_HICO_train2015_00008739.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_gt/sandwich__hake_train2015_HICO_train2015_00001551.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_gt/surfboard__hake_train2015_HICO_train2015_00003465.gif"
+                />
+              </div>
+            </div>
+          </div>
+          <div style="text-align: center">
+            <div class="container is-max-desktop" style="padding-top: 15px">
+              Reconstruction examples of <b>PICO-fit*</b>, using PICO-db contact annotations.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero is-light is-small">
+      <div class="hero-body">
+        <h2 class="title is-4" style="text-align: center;">PICO-fit examples:</h2>
+        <div class="container">
+          <div id="results-carousel" class="carousel results-carousel">
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                  src="/media/upload/static/images/pico_fit_auto/bench__hake_train2015_HICO_train2015_00011453.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_auto/bicycle__hake_train2015_HICO_train2015_00005197.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_auto/cake__hake_train2015_HICO_train2015_00003178.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_auto/couch__vcoco_000000376366.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_auto/frisbee__hake_train2015_HICO_train2015_00010641.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_auto/laptop__vcoco_000000220917.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_auto/skateboard__hake_train2015_HICO_train2015_00005830.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_auto/suitcase__hake_train2015_HICO_train2015_00012708.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_auto/tennis_racket__vcoco_000000426453.gif"
+                />
+              </div>
+            </div>
+            <div class="outer-div">
+              <div class="item item-steve render_wrapper_relative">
+                <img
+                src="/media/upload/static/images/pico_fit_auto/wine_glass__vcoco_000000501515.gif"
+                />
+              </div>
+            </div>
+          </div>
+          <div style="text-align: center">
+            <div class="container is-max-desktop" style="padding-top: 15px">
+              Reconstruction examples of <b>PICO-fit</b>, relying on contact lookup from PICO-db.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <!-- Abstract. -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Abstract</h2>
+            <div class="content has-text-justified">
+              <p margin="0">
+                Recovering 3D Human-Object Interaction (HOI) from single images is challenging due to depth ambiguities, occlusions,
+                and the huge variation in object shape and appearance. Thus, past work requires controlled settings such as known
+                object shapes and contacts, and tackles only limited object classes. Instead, we need methods that generalize to
+                natural images and novel object classes.
+              </p>
+              <p margin="0">
+                We tackle this in two main ways:
+              </p>
+              <p margin="0">
+                <b>(1)</b> We collect <b>PICO-db</b>, a new dataset of natural images uniquely paired with
+                dense 3D contact correspondences on both body and object meshes. To this end, we use images from the recent
+                DAMON dataset that are paired with annotated contacts, but only on a canonical 3D body. In contrast, we seek
+                contact labels on both the body and the object. To infer these, given an image, we retrieve an appropriate 3D object mesh
+                from a database by leveraging vision foundation models. Then, we project DAMON's body contact patches onto the
+                object via a novel method needing only 2 clicks per patch. This minimal human input establishes
+                rich contact correspondences between bodies and objects.
+              </p>
+              <p margin="0">
+              <b>(2)</b> We exploit our new dataset in a novel render-and-compare fitting method, called <b>PICO-fit</b>,
+                to recover 3D body and object meshes in interaction. PICO-fit infers contact for the SMPL-X body,
+                retrieves a likely 3D object mesh and contact from PICO-db for that object, and uses the contact to iteratively fit
+                the 3D body and object meshes to image evidence via optimization. Uniquely, PICO-fit works well for many object classes
+                that no existing method can tackle. This is crucial for scaling HOI understanding in the wild. 
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paper video. -->
+        <!-- TODO: add youtube video link in href tag -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Intro Video</h2>
+            <i>Coming soon!</i><br>
+            <!-- <div class="publication-video">
+              <iframe 
+                width="560" 
+                height="315" 
+                src="https://www.youtube.com/watch?v=MOtWvYXg_WU" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen>
+              </iframe>
+            </div> -->
+          </div>
+        </div>
+        <!--/ Paper video. -->
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <!-- Acknowledgments. -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-full-width">
+            <div class="content has-text-justified">
+              <h2 class="title is-3">Acknowledgments & Disclosure</h2>
+              We thank
+              <a href="https://is.mpg.de/person/grueninger">Felix Grüninger</a> for advice on mesh preprocessing,
+              <a href="https://is.mpg.de/person/jpassy">Jean-Claude Passy</a> and
+              <a href="https://is.mpg.de/person/vfelso">Valkyrie Felso</a> for advice on the data collection, and
+              <a href="https://people.mpi-inf.mpg.de/~xxie/">Xianghui Xie</a> for advice on HDM evaluation.
+              We also thank
+              <a href="https://is.mpg.de/person/talexiadis">Tsvetelina Alexiadis</a>,
+              <a href="https://is.mpg.de/person/tmcconnell">Taylor Obersat</a>,
+              <a href="https://is.mpg.de/person/cgallatz">Claudia Gallatz</a>,
+              <a href="https://is.mpg.de/person/abertler">Asuka Bertler</a>,
+              <a href="https://is.mpg.de/person/akuznetcova">Arina Kuznetcova</a>,
+              <a href="https://is.mpg.de/person/sbhor">Suraj Bhor</a>,
+              <a href="https://is.mpg.de/person/trakshit">Tithi Rakshit</a>,
+              <a href="https://is.mpg.de/person/ntomasz">Tomasz Niewiadomski</a>,
+              <a href="https://is.mpg.de/person/vfourel">Valerian Fourel</a> and
+              <a href="https://is.mpg.de/person/fdoll">Florentin Doll</a>
+              for their immense help in the data collection and verification process,
+              <a href="https://is.mpg.de/person/bpellkofer">Benjamin Pellkofer</a> for IT support, and
+              <a href="https://is.mpg.de/person/nathanasiou">Nikos Athanasiou</a> for the helpful discussions.
+              
+              This work was funded in part by the International Max Planck Research School for Intelligent Systems (IMPRS-IS).
+              D. Tzionas is supported by the ERC Starting Grant (project STRIPES, 101165317). 
+              <br /><br />
+              DT has received a research gift fund from Google.
+              While MJB is a co-founder and Chief Scientist at Meshcapade, his research in this project was performed solely at, and funded solely by, the Max Planck Society.
+            </div>
+          </div>
+        </div>
+        <!-- Acknowledgments. -->
+
+        <!-- Contact. -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-full-width">
+            <h2 class="title is-3">
+              Contact
+            </h2>
+
+            <div class="content has-text-justified">
+              For technical questions, please contact
+              <a href="mailto: pico@tue.mpg.de"
+                >pico@tue.mpg.de</a
+              >
+              <br />
+
+              For commercial licensing, please contact
+              <a href="mailto: ps-licensing@tue.mpg.de"
+                >ps-licensing@tue.mpg.de</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="BibTeX">
+      <div class="container is-max-desktop content">
+        <h2 class="title">BibTeX</h2>
+        <pre>
+<code>@misc{cseke_tripathi_2025_cvpr_pico,
+    title     = {{PICO}: Reconstructing {3D} People In Contact with Objects}, 
+    author    = {Alp\'{a}r Cseke and Shashank Tripathi and Sai Kumar Dwivedi and Arjun Lakshmipathy and Agniv Chatterjee and Michael J. Black and Dimitrios Tzionas},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2025},
+}</code></pre>
+      </div>
+    </section>
+
+
+    <footer class="footer">
+      <div class="container">
+        <div class="columns is-centered">
+          <div class="column is-8">
+            <div class="content">
+              <p style="text-align: center">
+                Source code mainly borrowed from
+                <a href="https://sha2nkt.github.io/">Shashank Tripathi</a>'s
+                <a href="https://xiuyuliang.cn/econ/">DECO website</a> and
+                <a href="https://nihalsid.github.io/"
+                  >Yawar Siddiqui</a
+                >'s' adoption for
+                <a href="https://nihalsid.github.io/texturify/">Texturify</a>.<br>
+                The code for this website can be found <a href="https://github.com/ac5113/deco_website_github">here</a>.
+              </p>
+              <p style="text-align: center">
+                For technical questions, please contact
+                <a href="mailto: pico@tue.mpg.de">PICO</a><br />
+                For commercial licensing, please contact
+                <a href="mailto: ps-licensing@tue.mpg.de">ps-licensing</a><br />
+                <small
+                  >© 2023 Max-Planck-Gesellschaft
+                  <small class="text-muted ml-1 mr-1">-</small>
+                  <a href="imprint.html">Imprint</a>
+                  <small class="text-muted ml-1 mr-1">-</small>
+                  <a href="privacy-policy.html">Privacy Policy</a>
+                  <small class="text-muted ml-1 mr-1">-</small>
+                  <a href="license.html">License</a>
+                </small>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </body>
+</html>
