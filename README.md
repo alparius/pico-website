@@ -1,15 +1,14 @@
-Website for [PICO: Reconstructing 3D People In Contact with Objects](https://pico.is.tue.mpg.de/)
+Code for the website for [PICO: Reconstructing 3D People In Contact with Objects](https://pico.is.tue.mpg.de/)
 
 If you find this code useful for your research, please consider citing the following paper:
 
 <!-- TODO: add new citation -->
-<!-- ```bibtex
-@InProceedings{tripathi2023deco,
-    author    = {Tripathi, Shashank and Chatterjee, Agniv and Passy, Jean-Claude and Yi, Hongwei and Tzionas, Dimitrios and Black, Michael J.},
-    title     = {{DECO}: Dense Estimation of {3D} Human-Scene Contact In The Wild},
-    booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
-    month     = {October},
-    year      = {2023},
-    pages     = {8001-8013}
+```bibtex
+@inproceedings{cseke_tripathi_2025_pico,
+    title     = {{PICO}: Reconstructing {3D} People In Contact with Objects}, 
+    author    = {Alp\'{a}r Cseke and Shashank Tripathi and Sai Kumar Dwivedi and Arjun Lakshmipathy and Agniv Chatterjee and Michael J. Black and Dimitrios Tzionas},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2025},
 }
-``` -->
+```
